@@ -17,7 +17,7 @@ var editor_ready = false
 var tab_title = "Script Editor"
 
 # Utils
-func _find_node_loop(_root, compare:Callable, only_first:bool, trail:Array = []):
+func _find_node_loop(_root, compare:Callable, only_first:bool, trail:Array = []) -> Array:
 	var found:Array = trail
 	if _root is Node:
 		for child in _root.get_children():
@@ -35,7 +35,7 @@ func find_node(stack:Node, compare:Callable, only_first:bool):
 	return null
 
 # Display file on FileSystem Tab
-func display_on_fileSystem_tree(filepath:GDScript):
+func display_on_fileSystem_tree(filepath:GDScript) -> void:
 	var file_path = filepath.resource_path
 	last_script_selected = filepath
 
@@ -55,10 +55,10 @@ func _init() -> void: # Track screen changes
 	container.name = tab_title
 	plugin_enabled = true
 
-func _ready():
+func _ready() -> void:
 	connect("main_screen_changed", on_scene_change)
 
-func on_ready():
+func on_ready() -> void:
 	editor_ready = true
 	if last_script_selected: display_on_fileSystem_tree(last_script_selected)
 	var diff_size_tab_and_textEditor = abs(script_editor_win.size.x - script_editor_win.get_current_editor().size.x)
@@ -90,7 +90,7 @@ func _enter_tree() -> void:
 	open_last_tab(false) # Click on 2D/3D/AssetLib tab
 	focus_on_tab()
 
-func focus_on_tab():
+func focus_on_tab() -> void:
 	container.get_parent().current_tab = container.get_parent().get_tab_idx_from_control(container)
 
 func get_toolbar():
@@ -128,14 +128,14 @@ func toggle_script_icon_visibility() -> void:
 	if plugin_enabled: get_dock_button("Script").connect("toggled", open_last_tab)
 	else:              get_dock_button("Script").disconnect("toggled", open_last_tab)
 
-func open_last_tab(_toggled:bool): focus_on_tab(); call_deferred("def_open_last_tab")
-func def_open_last_tab(): get_dock_button(last_selected_dock).pressed.emit()
+func open_last_tab(_toggled:bool) -> void: focus_on_tab(); call_deferred("def_open_last_tab")
+func def_open_last_tab()          -> void: get_dock_button(last_selected_dock).pressed.emit()
 
-func on_scene_change(dock_name:String):
+func on_scene_change(dock_name:String) -> void:
 	if dock_name != "Script": last_selected_dock = dock_name
 	else: open_last_tab(false)
 
-func resize_container():
+func resize_container() -> void:
 	container.size = container.get_parent().size - Vector2(0, 28)
 	container.position = Vector2(0,28)
 	script_editor_win.size = container.size
