@@ -13,3 +13,6 @@ export_presets.cfg
 .mono/
 data_*/
 mono_crash.*.json
+
+# Exclude saved settings file
+addons/ScriptToTab/save_params.json
