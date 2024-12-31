@@ -1,0 +1,98 @@
+[gd_scene load_steps=2 format=3 uid="uid://dgqgkdkne6phe"]
+
+[ext_resource type="Script" uid="uid://dgc4w7a25l3cf" path="res://addons/ScriptToTab/Interface/interface.gd" id="1_w1yf7"]
+
+[node name="Interface" type="Control" node_paths=PackedStringArray("options_buttons")]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 534.0
+offset_bottom = 486.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_w1yf7")
+options_buttons = {
+"opt_filesSystem": NodePath("VBoxContainer/OptionsFooter/FileExplorer"),
+"opt_hide_side_panel": NodePath("VBoxContainer/OptionsFooter/SidePanel"),
+"opt_ignore_addn": NodePath("VBoxContainer/OptionsFooter/IngoreAddons"),
+"opt_reveal_file": NodePath("VBoxContainer/OptionsFooter/RevealInFileExplorer")
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="FileDock" type="Control" parent="VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(320, 0)
+layout_mode = 2
+
+[node name="resize" type="ColorRect" parent="VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(3, 0)
+layout_mode = 2
+mouse_default_cursor_shape = 15
+color = Color(1, 1, 1, 0.0313726)
+
+[node name="handle" type="ColorRect" parent="VBoxContainer/HBoxContainer/resize"]
+modulate = Color(1, 1, 1, 0)
+custom_minimum_size = Vector2(3, 28)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+color = Color(0.827202, 0.390772, 0, 1)
+
+[node name="ScriptDock" type="Control" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Separator" type="ColorRect" parent="VBoxContainer"]
+custom_minimum_size = Vector2(0, 1)
+layout_mode = 2
+color = Color(1, 1, 1, 0.0784314)
+
+[node name="OptionsFooter" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="FileExplorer" type="CheckBox" parent="VBoxContainer/OptionsFooter"]
+layout_mode = 2
+tooltip_text = "Adds File Explorer to the
+panel to gain vertical space"
+text = "File Explorer"
+
+[node name="ColorRect2" type="ColorRect" parent="VBoxContainer/OptionsFooter"]
+custom_minimum_size = Vector2(1, 0)
+layout_mode = 2
+color = Color(1, 1, 1, 0.0823529)
+
+[node name="RevealInFileExplorer" type="CheckBox" parent="VBoxContainer/OptionsFooter"]
+layout_mode = 2
+tooltip_text = "Reveals file in File Explorer"
+text = "Show in File Explorer"
+
+[node name="IngoreAddons" type="CheckBox" parent="VBoxContainer/OptionsFooter"]
+layout_mode = 2
+tooltip_text = "Don't show file in File Exploorer
+if it's an addon (only is Show in FE enabled)"
+text = "Ignore /addons"
+
+[node name="ColorRect" type="ColorRect" parent="VBoxContainer/OptionsFooter"]
+custom_minimum_size = Vector2(1, 0)
+layout_mode = 2
+color = Color(1, 1, 1, 0.0823529)
+
+[node name="SidePanel" type="CheckBox" parent="VBoxContainer/OptionsFooter"]
+layout_mode = 2
+tooltip_text = "Hide Script editor side pannel by default"
+text = "Hide side panel"
