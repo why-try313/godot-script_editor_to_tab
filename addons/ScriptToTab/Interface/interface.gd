@@ -29,11 +29,12 @@ var is_active_mouse:bool = false:
 	set(v): is_active_mouse = v; color_resize_bar(true)
 
 
-func _enter_tree() -> void:
+func _install() -> void:
+	if ScriptEdit and ScriptEdit.get_parent() == el_scriptDock: return
 	_set_settings()
-	await get_tree().create_timer(0.2).timeout; resize_panels()
-	await get_tree().create_timer(0.2).timeout; resize_panels()
-	await get_tree().create_timer(0.2).timeout; resize_panels()
+	if is_inside_tree(): await get_tree().create_timer(0.2).timeout; resize_panels()
+	if is_inside_tree(): await get_tree().create_timer(0.2).timeout; resize_panels()
+	if is_inside_tree(): await get_tree().create_timer(0.2).timeout; resize_panels()
 	if !is_set and settings.has("plugins/script_to_tab/hide_editor_side_panel"):
 		toggle_script_panel(settings["plugins/script_to_tab/hide_editor_side_panel"].value)
 		is_set = true
@@ -163,7 +164,7 @@ func _input(event: InputEvent) -> void:
 		call_deferred("resize_panels")
 
 
-func _exit_tree()  -> void:
+func _uninstall()  -> void:
 	el_resize.disconnect("gui_input", resize_dock)
 	el_resize.disconnect("mouse_entered", color_resize_bar)
 	el_resize.disconnect("mouse_exited", color_resize_bar)

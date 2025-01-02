@@ -37,7 +37,8 @@ func _enter_tree() -> void:
 	interface.size = container.size
 	interface.ScriptEdit = editor_interface.get_script_editor()
 	interface.FileSystem = editor_interface.get_file_system_dock()
-	container.connect("visibility_changed", interface._enter_tree)
+	interface._install()
+	#container.connect("visibility_changed", interface._enter_tree)
 	toolbar_button = get_dock_button("Script")
 	await get_tree().create_timer(0.2).timeout
 	if toolbar_button:
@@ -80,7 +81,8 @@ func _exit_tree() -> void:
 		toolbar_button.scale = Vector2(1.0, 1.0)
 		toolbar_button.modulate = Color(1.0,1.0,1.0,1.0)
 		toolbar_button.mouse_filter = Control.MOUSE_FILTER_STOP
-	container.disconnect("visibility_changed", interface._enter_tree)
+	#container.disconnect("visibility_changed", interface._enter_tree)
+	interface._uninstall()
 	container.remove_child(interface)
 	var editor_settings:EditorSettings = get_editor_interface().get_editor_settings()
 	for key:String in settings_data.keys():
