@@ -1,7 +1,7 @@
 @tool
 extends Control
+signal settings_changed
 
-#signal add_file_explorer_tab
 var is_set = false
 var FileSysteParent  = null
 var ScriptEditParent = null
@@ -17,43 +17,54 @@ var ScriptEditParent = null
 @onready var el_scriptDock:Control    = $VBoxContainer/HBoxContainer/ScriptDock
 @onready var el_resize:ColorRect      = $VBoxContainer/HBoxContainer/resize
 @onready var el_resize_handle:ColorRect = $VBoxContainer/HBoxContainer/resize/handle
-@export var options_buttons:Dictionary[String, CheckBox] = {
-	"opt_filesSystem": null,
-	"opt_reveal_file": null,
-	"opt_ignore_addn": null,
-	"opt_hide_side_panel": null,
-}
+# @export var options_buttons:Dictionary[String, CheckBox] = { # Godot 4.4
+@onready var opt_filesSystem:CheckBox = $VBoxContainer/OptionsFooter/FileExplorer
+@onready var opt_reveal_file:CheckBox = $VBoxContainer/OptionsFooter/RevealInFileExplorer
+@onready var opt_ignore_addn:CheckBox = $VBoxContainer/OptionsFooter/IngoreAddons
+@onready var opt_hide_side_panel:CheckBox = $VBoxContainer/OptionsFooter/SidePanel
+var options_buttons:Dictionary = {}
+var settings_data:Dictionary = { "options": {}, "file_manager_size": 0 }
 
 var dock_size:float = 0.0
 var is_active_mouse:bool = false:
 	set(v): is_active_mouse = v; color_resize_bar(true)
 
-
 func _install() -> void:
+	options_buttons = {
+		"opt_filesSystem": opt_filesSystem,
+		"opt_reveal_file": opt_reveal_file,
+		"opt_ignore_addn": opt_ignore_addn,
+		"opt_hide_side_panel": opt_hide_side_panel,
+	}
 	if ScriptEdit and ScriptEdit.get_parent() == el_scriptDock: return
 	_set_settings()
-	if is_inside_tree(): await get_tree().create_timer(0.2).timeout; resize_panels()
-	if is_inside_tree(): await get_tree().create_timer(0.2).timeout; resize_panels()
-	if is_inside_tree(): await get_tree().create_timer(0.2).timeout; resize_panels()
+	#if is_inside_tree(): await get_tree().create_timer(0.2).timeout; resize_panels()
+	#if is_inside_tree(): await get_tree().create_timer(0.2).timeout; resize_panels()
+	if is_inside_tree(): await get_tree().create_timer(1.0).timeout; resize_panels()
 	if !is_set and settings.has("plugins/script_to_tab/hide_editor_side_panel"):
 		toggle_script_panel(settings["plugins/script_to_tab/hide_editor_side_panel"].value)
 		is_set = true
 
 
 func _set_settings():
+	if !is_inside_tree(): return
 	for key in settings.keys():
 		var btn_name = settings[ key ].button_var
-		if options_buttons[ btn_name ]:
+		if options_buttons.has(btn_name):
+			assert(options_buttons[ btn_name ] is CheckBox, "Checkbox expected")
 			options_buttons[ btn_name ].button_pressed = settings[ key ].value
 
 
 func _ready() -> void:
+	_install()
+	_set_settings()
 	el_resize.connect("gui_input", resize_dock)
 	el_resize.connect("mouse_entered", color_resize_bar.bind(true))
 	el_resize.connect("mouse_exited", color_resize_bar.bind(false))
 	el_resize_handle.color = EditorInterface.get_editor_settings().get_setting("interface/theme/accent_color")
-	options_buttons.opt_filesSystem.connect("toggled", toggle_file_explorer)
-	options_buttons.opt_hide_side_panel.connect("toggled", toggle_script_panel)
+	opt_filesSystem.connect("toggled", toggle_file_explorer)
+	opt_hide_side_panel.connect("toggled", toggle_script_panel)
+	opt_reveal_file.connect("toggled", toggle_reveal_in_fileSystem)
 	if get_parent().has_signal("resized"): get_parent().connect("resized", resize_panels)
 	position.x = 0.0; position.y = 0.0;
 	color_resize_bar(false)
@@ -97,23 +108,9 @@ func install_script_editor():
 func on_script_changed(script:Script):
 	if !script: return
 	var path = script.resource_path
-	if options_buttons.opt_reveal_file.button_pressed:
-		if options_buttons.opt_ignore_addn.button_pressed and path.begins_with("res://addons/"): return
+	if opt_reveal_file.button_pressed:
+		if opt_ignore_addn.button_pressed and path.begins_with("res://addons/"): return
 		EditorInterface.select_file(path)
-
-
-func toggle_file_manager():
-	if !FileSystem: return
-	if options_buttons.opt_filesSystem.button_pressed and FileSystem.get_parent() == FileSysteParent:
-		FileSysteParent = FileSystem.get_parent()
-		FileSysteParent.remove_child(FileSystem)
-		el_fileDock.add_child(FileSystem)
-		set_panel_props(FileSystem)
-	elif !options_buttons.opt_filesSystem.button_pressed and FileSystem.get_parent() == el_fileDock:
-		el_fileDock.remove_child(FileSystem);
-		FileSysteParent.add_child(FileSystem)
-		FileSysteParent.visible = true
-	set_layout()
 
 
 func resize_panels():
@@ -134,22 +131,40 @@ func set_layout():
 	call_deferred("resize_panels")
 
 
-func toggle_file_explorer(val:bool):
-	options_buttons.opt_filesSystem.button_pressed = val
-	toggle_file_manager()
-
-
-func toggle_script_panel(val:bool):
-	options_buttons.opt_hide_side_panel.button_pressed = val
-	var script_list = find_or_null(ScriptEdit.find_children("*", "VSplitContainer", true, false))
-	if script_list: script_list.visible = !options_buttons.opt_hide_side_panel.button_pressed
-
-
 static func find_or_null(arr: Array[Node], index: int = 0) -> Node:
 	if arr.is_empty():
 		push_error("Node not found - Plugin will not work correctly. This might be due to some other plugins or changes in the Engine.")
 		return null
 	return arr[index]
+
+
+func toggle_file_manager():
+	if !FileSystem: return
+	if opt_filesSystem.button_pressed and FileSystem.get_parent() == FileSysteParent:
+		FileSysteParent = FileSystem.get_parent()
+		FileSysteParent.remove_child(FileSystem)
+		el_fileDock.add_child(FileSystem)
+		set_panel_props(FileSystem)
+	elif !opt_filesSystem.button_pressed and FileSystem.get_parent() == el_fileDock:
+		el_fileDock.remove_child(FileSystem);
+		FileSysteParent.add_child(FileSystem)
+		FileSysteParent.visible = true
+	set_layout()
+	settings_changed.emit()
+
+
+func toggle_reveal_in_fileSystem(val:bool): settings_changed.emit()
+func toggle_file_explorer(val:bool):
+	opt_filesSystem.button_pressed = val
+	toggle_file_manager()
+	settings_changed.emit()
+
+
+func toggle_script_panel(val:bool):
+	opt_hide_side_panel.button_pressed = val
+	var script_list = find_or_null(ScriptEdit.find_children("*", "VSplitContainer", true, false))
+	if script_list: script_list.visible = !opt_hide_side_panel.button_pressed
+	settings_changed.emit()
 
 
 func resize_dock(event:InputEvent) -> void:
@@ -169,8 +184,9 @@ func _uninstall()  -> void:
 	el_resize.disconnect("mouse_entered", color_resize_bar)
 	el_resize.disconnect("mouse_exited", color_resize_bar)
 	ScriptEdit.disconnect("editor_script_changed", on_script_changed)
-	options_buttons.opt_filesSystem.disconnect("toggled", toggle_file_explorer)
-	options_buttons.opt_hide_side_panel.disconnect("toggled", toggle_script_panel)
+	opt_filesSystem.disconnect("toggled", toggle_file_explorer)
+	opt_hide_side_panel.disconnect("toggled", toggle_script_panel)
+	opt_reveal_file.disconnect("toggled", toggle_reveal_in_fileSystem)
 	# el_fileDock.remove_child(FileSystem);    FileSysteParent.add_child(FileSystem)
 	el_scriptDock.remove_child(ScriptEdit);  ScriptEditParent.add_child(ScriptEdit)
 	if get_parent().has_signal("resized"): get_parent().disconnect("resized", resize_panels)

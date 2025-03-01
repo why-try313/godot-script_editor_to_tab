@@ -1,21 +1,14 @@
 [gd_scene load_steps=2 format=3 uid="uid://dgqgkdkne6phe"]
 
-[ext_resource type="Script" uid="uid://dgc4w7a25l3cf" path="res://addons/ScriptToTab/Interface/interface.gd" id="1_w1yf7"]
+[ext_resource type="Script" path="res://addons/ScriptToTab/Interface/interface.gd" id="1_w1yf7"]
 
-[node name="Interface" type="Control" node_paths=PackedStringArray("options_buttons")]
+[node name="Interface" type="Control"]
 layout_mode = 3
-anchors_preset = 0
-offset_right = 534.0
-offset_bottom = 486.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
+offset_right = 1152.0
+offset_bottom = 648.0
+grow_horizontal = 2
+grow_vertical = 2
 script = ExtResource("1_w1yf7")
-options_buttons = {
-"opt_filesSystem": NodePath("VBoxContainer/OptionsFooter/FileExplorer"),
-"opt_hide_side_panel": NodePath("VBoxContainer/OptionsFooter/SidePanel"),
-"opt_ignore_addn": NodePath("VBoxContainer/OptionsFooter/IngoreAddons"),
-"opt_reveal_file": NodePath("VBoxContainer/OptionsFooter/RevealInFileExplorer")
-}
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 1
@@ -51,7 +44,7 @@ anchor_bottom = 0.5
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 1
-color = Color(0.827202, 0.390772, 0, 1)
+color = Color(0.860691, 0.451243, 0.0893796, 1)
 
 [node name="ScriptDock" type="Control" parent="VBoxContainer/HBoxContainer"]
 layout_mode = 2

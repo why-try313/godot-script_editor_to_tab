@@ -20,7 +20,8 @@ func _init() -> void: # Track screen changes
 	container.name = tab_title
 	container.visible = false # Required to toggle visibility_changed
 
-func _enter_tree() -> void:
+#func _enter_tree() -> void:
+func _ready() -> void:
 	var settings:Dictionary = {}
 	var editor_settings:EditorSettings = get_editor_interface().get_editor_settings()
 	for key in settings_data.keys():
@@ -38,9 +39,10 @@ func _enter_tree() -> void:
 	interface.ScriptEdit = editor_interface.get_script_editor()
 	interface.FileSystem = editor_interface.get_file_system_dock()
 	interface._install()
+	interface.connect('settings_changed', save_settings)
 	#container.connect("visibility_changed", interface._enter_tree)
 	toolbar_button = get_dock_button("Script")
-	await get_tree().create_timer(0.2).timeout
+	# await get_tree().create_timer(2.0).timeout
 	if toolbar_button:
 		toolbar_values.posix = toolbar_button.get_index()
 		toolbar_button.get_parent().move_child(toolbar_button, 0)
@@ -75,6 +77,11 @@ func on_scene_change(dock_name:String) -> void:
 	if dock_name != "Script": last_selected_dock = dock_name
 	else: open_last_tab(false)
 
+func save_settings():
+	var editor_settings:EditorSettings = get_editor_interface().get_editor_settings()
+	for key:String in settings_data.keys():
+		editor_settings.set_setting(key, interface.options_buttons[ settings_data[key] ].button_pressed)
+
 func _exit_tree() -> void:
 	if toolbar_button:
 		toolbar_button.get_parent().move_child(toolbar_button, toolbar_values.posix)
@@ -82,9 +89,7 @@ func _exit_tree() -> void:
 		toolbar_button.modulate = Color(1.0,1.0,1.0,1.0)
 		toolbar_button.mouse_filter = Control.MOUSE_FILTER_STOP
 	#container.disconnect("visibility_changed", interface._enter_tree)
+	interface.disconnect('settings_changed', save_settings)
 	interface._uninstall()
 	container.remove_child(interface)
-	var editor_settings:EditorSettings = get_editor_interface().get_editor_settings()
-	for key:String in settings_data.keys():
-		editor_settings.set_setting(key, interface.options_buttons[ settings_data[key] ].button_pressed)
 	remove_control_from_docks(container)
