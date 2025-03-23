@@ -22,6 +22,7 @@ func _init() -> void: # Track screen changes
 
 #func _enter_tree() -> void:
 func _ready() -> void:
+	await get_tree().create_timer(1).timeout
 	var settings:Dictionary = {}
 	var editor_settings:EditorSettings = get_editor_interface().get_editor_settings()
 	for key in settings_data.keys():
@@ -51,7 +52,10 @@ func _ready() -> void:
 		toolbar_button.modulate = Color(1.0,1.0,1.0,0.0)
 
 func focus_on_tab() -> void:
-	container.get_parent().current_tab = container.get_parent().get_tab_idx_from_control(container)
+	if container and container.get_parent():
+		container.get_parent().current_tab = container.get_parent().get_tab_idx_from_control(container)
+	else:
+		print("no parent")
 
 func get_toolbar():
 	# Find button in classic editor container
