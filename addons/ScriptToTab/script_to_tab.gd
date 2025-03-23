@@ -21,8 +21,13 @@ func _init() -> void: # Track screen changes
 	container.visible = false # Required to toggle visibility_changed
 
 #func _enter_tree() -> void:
-func _ready() -> void:
+func _install() -> void:
 	await get_tree().create_timer(1).timeout
+
+	var fileSystem := EditorInterface.get_resource_filesystem()
+	if fileSystem.is_connected("filesystem_changed", _install):
+		fileSystem.disconnect("filesystem_changed", _install)
+
 	var settings:Dictionary = {}
 	var editor_settings:EditorSettings = get_editor_interface().get_editor_settings()
 	for key in settings_data.keys():
@@ -97,3 +102,10 @@ func _exit_tree() -> void:
 	interface._uninstall()
 	container.remove_child(interface)
 	remove_control_from_docks(container)
+
+func _ready():
+	var fileSystem := EditorInterface.get_resource_filesystem()
+	if fileSystem.is_scanning():
+		fileSystem.connect("filesystem_changed", _install)
+	else:
+		_install()
