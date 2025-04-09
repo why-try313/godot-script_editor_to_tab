@@ -56,7 +56,7 @@ func _set_settings():
 			assert(options_buttons[ btn_name ] is CheckBox, "Checkbox expected")
 			options_buttons[ btn_name ].button_pressed = settings[ key ].value
 
-
+var direction_resize = 1
 func _ready() -> void:
 	_install()
 	_set_settings()
@@ -75,9 +75,13 @@ func _ready() -> void:
 
 func toggled_switch_pannels(_pass:bool):
 	if opt_switch_pannels.button_pressed:
+		direction_resize = -1
+		el_fileDock.get_parent().move_child(el_fileDock, 2)
 		el_scriptDock.get_parent().move_child(el_scriptDock, 0)
 	else:
+		direction_resize = 1
 		el_fileDock.get_parent().move_child(el_fileDock, 0)
+		el_scriptDock.get_parent().move_child(el_scriptDock, 2)
 
 
 func color_resize_bar(active:bool):
@@ -185,7 +189,7 @@ func resize_dock(event:InputEvent) -> void:
 func _input(event: InputEvent) -> void:
 	if !is_active_mouse: return
 	if event is InputEventMouseMotion:
-		el_fileDock.custom_minimum_size.x = el_fileDock.custom_minimum_size.x + event.relative.x
+		el_fileDock.custom_minimum_size.x = el_fileDock.custom_minimum_size.x + (event.relative.x * direction_resize)
 		call_deferred("resize_panels")
 
 
