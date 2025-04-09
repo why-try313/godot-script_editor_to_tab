@@ -21,6 +21,7 @@ var ScriptEditParent = null
 @onready var opt_filesSystem:CheckBox = $VBoxContainer/OptionsFooter/FileExplorer
 @onready var opt_reveal_file:CheckBox = $VBoxContainer/OptionsFooter/RevealInFileExplorer
 @onready var opt_ignore_addn:CheckBox = $VBoxContainer/OptionsFooter/IngoreAddons
+@onready var opt_switch_pannels:CheckBox  = $VBoxContainer/OptionsFooter/SwitchPannels
 @onready var opt_hide_side_panel:CheckBox = $VBoxContainer/OptionsFooter/SidePanel
 var options_buttons:Dictionary = {}
 var settings_data:Dictionary = { "options": {}, "file_manager_size": 0 }
@@ -34,6 +35,7 @@ func _install() -> void:
 		"opt_filesSystem": opt_filesSystem,
 		"opt_reveal_file": opt_reveal_file,
 		"opt_ignore_addn": opt_ignore_addn,
+		"opt_switch_pannels": opt_switch_pannels,
 		"opt_hide_side_panel": opt_hide_side_panel,
 	}
 	if ScriptEdit and ScriptEdit.get_parent() == el_scriptDock: return
@@ -63,11 +65,19 @@ func _ready() -> void:
 	el_resize.connect("mouse_exited", color_resize_bar.bind(false))
 	el_resize_handle.color = EditorInterface.get_editor_settings().get_setting("interface/theme/accent_color")
 	opt_filesSystem.connect("toggled", toggle_file_explorer)
+	opt_switch_pannels.connect("toggled", toggled_switch_pannels)
 	opt_hide_side_panel.connect("toggled", toggle_script_panel)
 	opt_reveal_file.connect("toggled", toggle_reveal_in_fileSystem)
 	if get_parent().has_signal("resized"): get_parent().connect("resized", resize_panels)
 	position.x = 0.0; position.y = 0.0;
 	color_resize_bar(false)
+	toggled_switch_pannels(false)
+
+func toggled_switch_pannels(_pass:bool):
+	if opt_switch_pannels.button_pressed:
+		el_scriptDock.get_parent().move_child(el_scriptDock, 0)
+	else:
+		el_fileDock.get_parent().move_child(el_fileDock, 0)
 
 
 func color_resize_bar(active:bool):
