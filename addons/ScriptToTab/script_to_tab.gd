@@ -9,6 +9,7 @@ var settings_data:Dictionary = {
 	"plugins/ScriptToTab/file_explorer":           "opt_filesSystem",
 	"plugins/ScriptToTab/reveal_ingnore_addons":   "opt_ignore_addn",
 	"plugins/ScriptToTab/reveal_in_file_explorer": "opt_reveal_file",
+	"plugins/ScriptToTab/switch_pannels":          "opt_switch_pannels",
 	"plugins/ScriptToTab/hide_editor_side_panel":  "opt_hide_side_panel"
 }
 var toolbar_button:Button # The button be hidden

@@ -26,9 +26,12 @@ var ScriptEditParent = null
 var options_buttons:Dictionary = {}
 var settings_data:Dictionary = { "options": {}, "file_manager_size": 0 }
 
+
 var dock_size:float = 0.0
+var direction_resize:int = 1
 var is_active_mouse:bool = false:
 	set(v): is_active_mouse = v; color_resize_bar(true)
+
 
 func _install() -> void:
 	options_buttons = {
@@ -56,7 +59,7 @@ func _set_settings():
 			assert(options_buttons[ btn_name ] is CheckBox, "Checkbox expected")
 			options_buttons[ btn_name ].button_pressed = settings[ key ].value
 
-var direction_resize = 1
+
 func _ready() -> void:
 	_install()
 	_set_settings()
@@ -73,6 +76,7 @@ func _ready() -> void:
 	color_resize_bar(false)
 	toggled_switch_pannels(false)
 
+
 func toggled_switch_pannels(_pass:bool):
 	if opt_switch_pannels.button_pressed:
 		direction_resize = -1
@@ -82,6 +86,8 @@ func toggled_switch_pannels(_pass:bool):
 		direction_resize = 1
 		el_fileDock.get_parent().move_child(el_fileDock, 0)
 		el_scriptDock.get_parent().move_child(el_scriptDock, 2)
+	resize_panels()
+	settings_changed.emit()
 
 
 func color_resize_bar(active:bool):
