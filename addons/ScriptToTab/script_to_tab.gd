@@ -10,7 +10,7 @@ var settings_data:Dictionary = {
 	"plugins/ScriptToTab/reveal_ingnore_addons":   "opt_ignore_addn",
 	"plugins/ScriptToTab/reveal_in_file_explorer": "opt_reveal_file",
 	"plugins/ScriptToTab/switch_pannels":          "opt_switch_pannels",
-	"plugins/ScriptToTab/hide_editor_side_panel":  "opt_hide_side_panel"
+	"plugins/ScriptToTab/hide_editor_side_panel":  "opt_hide_side_panel",
 }
 var toolbar_button:Button # The button be hidden
 var toolbar_values:Dictionary = { "posix": 0 }
@@ -37,8 +37,16 @@ func _install() -> void:
 				"button_var": settings_data[ key ],
 				"value": editor_settings.get_setting(key)
 			}
+
+	var last_position:DockSlot = DockSlot.DOCK_SLOT_LEFT_UL
+	if editor_settings.has_setting("plugins/ScriptToTab/dock_last_position"):
+		var pos_value = editor_settings.get_setting("plugins/ScriptToTab/dock_last_position")
+		if pos_value is int and pos_value > -1:
+			last_position = pos_value as DockSlot
+		
+
 	connect("main_screen_changed", on_scene_change)
-	add_control_to_dock(DockSlot.DOCK_SLOT_LEFT_UL, container)
+	add_control_to_dock(last_position, container)
 	var editor_interface = get_editor_interface()
 	interface.settings = settings
 	container.add_child(interface) # Move the script editor to holder
@@ -100,9 +108,27 @@ func _exit_tree() -> void:
 		toolbar_button.mouse_filter = Control.MOUSE_FILTER_STOP
 	#container.disconnect("visibility_changed", interface._enter_tree)
 	interface.disconnect('settings_changed', save_settings)
+	var dock_slot:DockSlot = get_dock_enum(container.get_parent()) as DockSlot
+	var editor_settings:EditorSettings = get_editor_interface().get_editor_settings()
+	editor_settings.set_setting("plugins/ScriptToTab/dock_last_position", dock_slot)
 	interface._uninstall()
 	container.remove_child(interface)
 	remove_control_from_docks(container)
+
+func get_dock_enum(node:Node) -> int:
+	var dock_slot_map: Dictionary = {
+		"DockSlotLeftUL": EditorPlugin.DOCK_SLOT_LEFT_UL,
+		"DockSlotLeftBL": EditorPlugin.DOCK_SLOT_LEFT_BL,
+		"DockSlotLeftUR": EditorPlugin.DOCK_SLOT_LEFT_UR,
+		"DockSlotLeftBR": EditorPlugin.DOCK_SLOT_LEFT_BR,
+		"DockSlotRightUL": EditorPlugin.DOCK_SLOT_RIGHT_UL,
+		"DockSlotRightBL": EditorPlugin.DOCK_SLOT_RIGHT_BL,
+		"DockSlotRightUR": EditorPlugin.DOCK_SLOT_RIGHT_UR,
+		"DockSlotRightBR": EditorPlugin.DOCK_SLOT_RIGHT_BR
+	}
+	if dock_slot_map.has(node.name):
+		return dock_slot_map[node.name]
+	return -1
 
 func _ready():
 	var fileSystem := EditorInterface.get_resource_filesystem()
