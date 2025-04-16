@@ -5,7 +5,7 @@
 [node name="Interface" type="Control"]
 layout_mode = 3
 anchors_preset = 0
-offset_right = 724.0
+offset_right = 943.0
 offset_bottom = 636.0
 script = ExtResource("1_w1yf7")
 
@@ -43,7 +43,7 @@ anchor_bottom = 0.5
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 1
-color = Color(0.827202, 0.390772, 0, 1)
+color = Color(0.866023, 0.443556, 0, 1)
 
 [node name="ScriptDock" type="Control" parent="VBoxContainer/HBoxContainer"]
 layout_mode = 2
@@ -81,7 +81,7 @@ color = Color(1, 1, 1, 0)
 [node name="Label" type="Label" parent="VBoxContainer/OptionsFooter"]
 modulate = Color(1, 1, 1, 0.482353)
 layout_mode = 2
-text = "Ctrl+K to toggle"
+text = "Ctrl+T to toggle"
 
 [node name="ColorRect3" type="ColorRect" parent="VBoxContainer/OptionsFooter"]
 custom_minimum_size = Vector2(1, 0)
