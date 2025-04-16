@@ -59,7 +59,7 @@ layout_mode = 2
 
 [node name="SidePanel" type="CheckBox" parent="VBoxContainer/OptionsFooter"]
 layout_mode = 2
-tooltip_text = "Hide Script editor side pannel by default"
+tooltip_text = "Hide scripts and methods list pannel"
 text = "Hide side panel"
 
 [node name="ColorRect" type="ColorRect" parent="VBoxContainer/OptionsFooter"]
@@ -69,8 +69,7 @@ color = Color(1, 1, 1, 0.0823529)
 
 [node name="SwitchPannels" type="CheckBox" parent="VBoxContainer/OptionsFooter"]
 layout_mode = 2
-tooltip_text = "Don't show file in File Exploorer
-if it's an addon (only is Show in FE enabled)"
+tooltip_text = "Move FileExplorer to left or right"
 text = "Switch Pannels"
 
 [node name="ColorRect2" type="ColorRect" parent="VBoxContainer/OptionsFooter"]
@@ -91,17 +90,15 @@ color = Color(1, 1, 1, 0.0823529)
 
 [node name="FileExplorer" type="CheckBox" parent="VBoxContainer/OptionsFooter"]
 layout_mode = 2
-tooltip_text = "Adds File Explorer to the
-panel to gain vertical space"
+tooltip_text = "Move FileExplorer to this pannel to act like an IDE"
 text = "File Explorer"
 
 [node name="RevealInFileExplorer" type="CheckBox" parent="VBoxContainer/OptionsFooter"]
 layout_mode = 2
-tooltip_text = "Reveals file in File Explorer"
+tooltip_text = "Selects the current file in File Explorer"
 text = "Show in File Explorer"
 
 [node name="IngoreAddons" type="CheckBox" parent="VBoxContainer/OptionsFooter"]
 layout_mode = 2
-tooltip_text = "Don't show file in File Exploorer
-if it's an addon (only is Show in FE enabled)"
+tooltip_text = "Ignore file selection if the files is an addon"
 text = "Ignore /addons"
