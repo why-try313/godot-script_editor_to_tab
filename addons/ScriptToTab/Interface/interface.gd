@@ -178,6 +178,9 @@ func toggle_file_explorer(val:bool):
 	opt_filesSystem.button_pressed = val
 	toggle_file_manager()
 	settings_changed.emit()
+	opt_switch_pannels.visible = opt_filesSystem.button_pressed
+	opt_reveal_file.visible = opt_filesSystem.button_pressed
+	opt_ignore_addn.visible = opt_filesSystem.button_pressed
 
 
 func toggle_script_panel(val:bool):

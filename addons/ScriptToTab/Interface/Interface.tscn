@@ -5,8 +5,8 @@
 [node name="Interface" type="Control"]
 layout_mode = 3
 anchors_preset = 0
-offset_right = 1072.0
-offset_bottom = 615.0
+offset_right = 724.0
+offset_bottom = 636.0
 script = ExtResource("1_w1yf7")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
@@ -57,21 +57,21 @@ color = Color(1, 1, 1, 0.0784314)
 [node name="OptionsFooter" type="HBoxContainer" parent="VBoxContainer"]
 layout_mode = 2
 
-[node name="FileExplorer" type="CheckBox" parent="VBoxContainer/OptionsFooter"]
+[node name="SidePanel" type="CheckBox" parent="VBoxContainer/OptionsFooter"]
 layout_mode = 2
-tooltip_text = "Adds File Explorer to the
-panel to gain vertical space"
-text = "File Explorer"
+tooltip_text = "Hide Script editor side pannel by default"
+text = "Hide side panel"
 
 [node name="ColorRect" type="ColorRect" parent="VBoxContainer/OptionsFooter"]
 custom_minimum_size = Vector2(1, 0)
 layout_mode = 2
 color = Color(1, 1, 1, 0.0823529)
 
-[node name="SidePanel" type="CheckBox" parent="VBoxContainer/OptionsFooter"]
+[node name="SwitchPannels" type="CheckBox" parent="VBoxContainer/OptionsFooter"]
 layout_mode = 2
-tooltip_text = "Hide Script editor side pannel by default"
-text = "Hide side panel"
+tooltip_text = "Don't show file in File Exploorer
+if it's an addon (only is Show in FE enabled)"
+text = "Switch Pannels"
 
 [node name="ColorRect2" type="ColorRect" parent="VBoxContainer/OptionsFooter"]
 custom_minimum_size = Vector2(1, 0)
@@ -79,10 +79,21 @@ layout_mode = 2
 size_flags_horizontal = 3
 color = Color(1, 1, 1, 0)
 
+[node name="Label" type="Label" parent="VBoxContainer/OptionsFooter"]
+modulate = Color(1, 1, 1, 0.482353)
+layout_mode = 2
+text = "Ctrl+K to toggle"
+
 [node name="ColorRect3" type="ColorRect" parent="VBoxContainer/OptionsFooter"]
 custom_minimum_size = Vector2(1, 0)
 layout_mode = 2
 color = Color(1, 1, 1, 0.0823529)
+
+[node name="FileExplorer" type="CheckBox" parent="VBoxContainer/OptionsFooter"]
+layout_mode = 2
+tooltip_text = "Adds File Explorer to the
+panel to gain vertical space"
+text = "File Explorer"
 
 [node name="RevealInFileExplorer" type="CheckBox" parent="VBoxContainer/OptionsFooter"]
 layout_mode = 2
@@ -94,9 +105,3 @@ layout_mode = 2
 tooltip_text = "Don't show file in File Exploorer
 if it's an addon (only is Show in FE enabled)"
 text = "Ignore /addons"
-
-[node name="SwitchPannels" type="CheckBox" parent="VBoxContainer/OptionsFooter"]
-layout_mode = 2
-tooltip_text = "Don't show file in File Exploorer
-if it's an addon (only is Show in FE enabled)"
-text = "Switch Pannels"
