@@ -138,5 +138,5 @@ func _ready():
 		_install()
 
 func _input(event: InputEvent) -> void:
-	if event is InputEventKey and event.keycode == KEY_K and Input.is_key_pressed(KEY_CTRL) and event.pressed:
+	if event is InputEventKey and event.keycode == KEY_T and Input.is_key_pressed(KEY_CTRL) and !Input.is_key_pressed(KEY_SHIFT) and event.pressed:
 		container.get_parent().visible = !container.get_parent().visible
