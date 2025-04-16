@@ -136,3 +136,7 @@ func _ready():
 		fileSystem.connect("filesystem_changed", _install)
 	else:
 		_install()
+
+func _input(event: InputEvent) -> void:
+	if event is InputEventKey and event.keycode == KEY_K and Input.is_key_pressed(KEY_CTRL) and event.pressed:
+		container.get_parent().visible = !container.get_parent().visible
